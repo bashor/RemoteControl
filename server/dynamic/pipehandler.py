@@ -18,15 +18,15 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
         """
         self.target_id = self.get_argument("to")
         self.source_id = self.get_argument("from")
-        if (self.source_id in __connections):
+        if self.source_id in self.__class__.__connections:
             debug("duplicate connection",
                 extra={
-                    "target": __connections[self.source_id].target_id,
+                    "target": self.__class__.__connections[self.source_id].target_id,
                     "source": self.source_id
                 }
             )
-            __connections[self.source_id].close()
-        __connections[self.source_id] = self
+            self.__class__.__connections[self.source_id].close()
+        self.__class__.__connections[self.source_id] = self
         debug("new connection accepted",
             extra={
                 "target": self.target_id,
@@ -46,11 +46,11 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
                 "source": self.source_id
             }
         )
-        if (self.target_id in __connections):
-            target_conn = __connections[self.target_id]
+        if self.target_id in self.__class__.__connections:
+            target_conn = self.__class__.__connections[self.target_id]
             if (target_conn.target_id == self.source_id):
                 debug("message retransmition")
-                __process_pool.apply_async(
+                self.__class__.__process_pool.apply_async(
                     target_conn.write_message,
                     (message,)
                 )
