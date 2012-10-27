@@ -18,15 +18,15 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
         """
         self.target_id = self.get_argument("to")
         self.source_id = self.get_argument("from")
-        if self.source_id in self.__class__.__connections:
+        if self.source_id in connections():
             debug("duplicate connection",
                 extra={
-                    "target": self.__class__.__connections[self.source_id].target_id,
+                    "target": connections()[self.source_id].target_id,
                     "source": self.source_id
                 }
             )
-            self.__class__.__connections[self.source_id].close()
-        self.__class__.__connections[self.source_id] = self
+            connections()[self.source_id].close()
+        connections()[self.source_id] = self
         debug("new connection accepted",
             extra={
                 "target": self.target_id,
@@ -46,14 +46,11 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
                 "source": self.source_id
             }
         )
-        if self.target_id in self.__class__.__connections:
-            target_conn = self.__class__.__connections[self.target_id]
+        if self.target_id in connections():
+            target_conn = connections()[self.target_id]
             if (target_conn.target_id == self.source_id):
                 debug("message retransmition")
-                self.__class__.__process_pool.apply_async(
-                    target_conn.write_message,
-                    (message,)
-                )
+                pool().apply_async(target_conn.write_message, (message,))
 
     def on_close(self):
         """Handles connection closing. Removes connection id from a dict."""
@@ -63,4 +60,10 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
                 "source": self.source_id
             }
         )
-        del self.__class__.__connections[self.source_id]
+        del connections()[self.source_id]
+
+    def connections(self):
+        return self.__class__.__connections
+
+    def pool(self):
+        return self.__class__.__process_pool
