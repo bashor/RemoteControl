@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="pref_host"
+        android:title="@string/pref_host"
+        android:summary="@string/pref_host_desription"
+        android:dialogTitle="@string/pref_host"
+        android:defaultValue="@string/pref_host_default"
+        />
+    <EditTextPreference
+        android:key="pref_port"
+        android:title="@string/pref_port"
+        android:summary="@string/pref_port_desription"
+        android:numeric="integer"
+        android:dialogTitle="@string/pref_port"
+        android:defaultValue="@string/pref_port_default"
+        />
+    <EditTextPreference
+        android:key="pref_source"
+        android:title="@string/pref_source"
+        android:summary="@string/pref_source_desription"
+        android:dialogTitle="@string/pref_source"
+        android:defaultValue="@string/pref_source_default"
+        />
+    <EditTextPreference
+        android:key="pref_target"
+        android:title="@string/pref_target"
+        android:summary="@string/pref_target_desription"
+        android:dialogTitle="@string/pref_target"
+        android:defaultValue="@string/pref_target_default"
+        />
+</PreferenceScreen>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">RemoteControl</string>
+    <string name="preferences">Preferences</string>
+    <string name="pref_description">Application settings</string>
+    <string name="pref_host">Target host</string>
+    <string name="pref_host_desription">host to connect</string>
+    <string name="pref_host_default">192.168.1.1</string>
+	<string name="pref_port">Target port</string>
+	<string name="pref_port_desription">server port to connect</string>
+    <string name="pref_port_default">8080</string>
+	<string name="pref_source">Source ID</string>
+	<string name="pref_source_desription">your unique identifier</string>
+    <string name="pref_source_default"> </string>
+	<string name="pref_target">Target ID</string>
+	<string name="pref_target_desription">target device uniqie identifier</string>
+    <string name="pref_target_default"> </string>
+</resources>
