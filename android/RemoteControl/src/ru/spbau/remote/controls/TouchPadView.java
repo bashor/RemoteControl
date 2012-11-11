@@ -52,6 +52,7 @@ public class TouchPadView extends FrameLayout implements PositionListener {
 		myLeftButton = (Button) child.findViewById(R.id.left_button);
 		myLeftButton.setOnTouchListener(new OnTouchListener() {	
 			public boolean onTouch(View v, MotionEvent event) {
+				v.onTouchEvent(event);
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					Log.d(this.getClass().getName(), "left button down");
 				} else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -64,6 +65,7 @@ public class TouchPadView extends FrameLayout implements PositionListener {
 		myRightButton = (Button) child.findViewById(R.id.right_button);
 		myRightButton.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
+				v.onTouchEvent(event);
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					Log.d(this.getClass().getName(), "right button down");
 				} else if (event.getAction() == MotionEvent.ACTION_UP) {
