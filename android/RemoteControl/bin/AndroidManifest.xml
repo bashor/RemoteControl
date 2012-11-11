@@ -14,7 +14,7 @@
             android:label="@string/preferences">
         </activity>
         <activity
-            android:name=".controls.TouchPadActivity"
+            android:name=".controls.touchpad.TouchPadActivity"
             android:description="@string/touch_description"
             android:label="@string/touchpad"
             android:screenOrientation="landscape">
