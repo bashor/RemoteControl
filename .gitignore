@@ -1,1 +1,7 @@
 *.pyc
+*.class
+*.dex
+*.apk
+.classpath
+android/RemoteControl/gen/*
+android/RemoteControl/bin/*

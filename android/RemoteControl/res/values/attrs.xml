@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="TouchPadStyle">
+	    <attr name="scrollWidth" format="fraction" />
+	    <attr name="buttonHeight" format="fraction" />
+	    <attr name="borderWidth" format="integer" />
+	    <attr name="topMargin" format="integer" />
+	    <attr name="leftMargin" format="integer" />
+	    <attr name="rightMargin" format="integer" />
+	    <attr name="bottomMargin" format="integer" />
+	    <attr name="padding" format="integer" />
+	    <attr name="borderColor" format="color" />
+	    <attr name="buttonMainColor" format="color" />
+	    <attr name="buttonSubColor" format="color" />
+		<attr name="touchPanelColor" format="color" />
+	</declare-styleable>
+</resources>
