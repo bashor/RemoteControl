@@ -3,11 +3,10 @@ package ru.spbau.remote.controls.touchpad;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.view.MotionEvent;
-import android.view.View;
+import android.util.Log;
 
 public class TouchButton extends BaseCustomControl {
-	private boolean myPushedFlag = false;
+	private boolean myPushedFlag;
 	
 	public TouchButton(TypedArray attrs) {
 		super(attrs);
@@ -19,34 +18,19 @@ public class TouchButton extends BaseCustomControl {
 		canvas.drawRect(rect(), painter);
 	}
 
-	public boolean onTouch(View v, MotionEvent event) {
-		boolean changed = false;
-		if ((event.getAction() == MotionEvent.ACTION_CANCEL
-				|| event.getAction() == MotionEvent.ACTION_UP) && myPushedFlag) {
-			changed = true;
-		} else if (!myPushedFlag) {
-			for (int p = 0; p < event.getPointerCount() && !changed; ++p) {
-				if (rect().contains((int)event.getX(p), (int)event.getY(p))) {
-					changed = true;
-				}
-			}
-		} else {
-			for (int p = 0; p < event.getPointerCount(); ++p) {
-				if (rect().contains((int)event.getX(p), (int)event.getY(p))) {
-					return true;
-				}
-			}
-			changed = true;
+	public void fingerDown(Event event) {
+		if (!fingers().isEmpty() && !myPushedFlag) {
+			myPushedFlag = true;
+			event.getView().invalidate(rect());
+			Log.d(getClass().getCanonicalName(), "button down");
 		}
-		if (changed) {
-			myPushedFlag = !myPushedFlag;
-			if (myPushedFlag) {
-				buttonDown();
-			} else {
-				buttonUp();
-			}
-			v.invalidate(rect());
+	}
+	
+	public void fingerUp(Event event) {
+		if (fingers().isEmpty() && myPushedFlag) {
+			myPushedFlag = false;
+			event.getView().invalidate(rect());
+			Log.d(getClass().getCanonicalName(), "button up");
 		}
-		return true;
 	}
 }

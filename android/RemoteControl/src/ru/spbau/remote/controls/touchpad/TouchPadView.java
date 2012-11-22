@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class TouchPadView extends View implements IPointerDeviceListener {
+public class TouchPadView extends View {
 	private static final int DEFAULT_MARGIN = 5;
 	private static final int DEFAULT_PADDING = 5;
 	private static final int DEFAULT_BUTTON_HEIGHT = 20;
@@ -35,11 +35,11 @@ public class TouchPadView extends View implements IPointerDeviceListener {
 	private void init(Context context, AttributeSet attrs) {
 		myAttrs = context.obtainStyledAttributes(attrs, R.styleable.TouchPadStyle);
 		myPanel = new TouchPanel(myAttrs);
-		myPanel.addListener(this);
+		//myPanel.addListener(this);
 		myLeft = new TouchButton(myAttrs);
-		myLeft.addListener(this);
+		//myLeft.addListener(this);
 		myRight = new TouchButton(myAttrs);
-		myRight.addListener(this);
+		//myRight.addListener(this);
 	}
 	
 	private RectF panelRect() {

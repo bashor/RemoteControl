@@ -1,7 +1,8 @@
 package ru.spbau.remote.controls.touchpad;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import ru.spbau.remote.R;
 import android.content.res.TypedArray;
@@ -9,18 +10,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnTouchListener;
 
 public abstract class BaseCustomControl implements OnTouchListener {
-	private final List<IPointerDeviceListener> myListeners = new LinkedList<IPointerDeviceListener>();
+	private final Set<Integer> myPointers = new HashSet<Integer>();
 	private final TypedArray myAttrs;
 	private RectF myBorder;
 	
 	public BaseCustomControl(TypedArray attrs, RectF border) {
 		myAttrs = attrs;
 		myBorder = border;
-		Log.d(getClass().getCanonicalName(), "widget created");
 	}
 	
 	public BaseCustomControl(TypedArray attrs) {
@@ -28,11 +29,13 @@ public abstract class BaseCustomControl implements OnTouchListener {
 	}
 	
 	public abstract void draw(Canvas canvas);
+	
+	public void fingerDown(Event event) {}
+	public void fingerUp(Event event) {}
+	public void fingerMove(Event event) {}
 
 	public void resize(RectF rect) {
 		myBorder = rect;
-		Log.d(getClass().getCanonicalName(), "resized to ("
-				+ myBorder.width() + "," + myBorder.height() + ")");
 	}
 	
 	public int mainButtonColor() {
@@ -76,32 +79,37 @@ public abstract class BaseCustomControl implements OnTouchListener {
 				(int)(left() + width()), (int)(top() + height()));
 	}
 	
-	public void addListener(IPointerDeviceListener listener) {
-		myListeners.add(listener);
+	public Set<Integer> fingers() {
+		return Collections.unmodifiableSet(myPointers);
 	}
 	
-	public void removeListener(IPointerDeviceListener listener) {
-		myListeners.remove(listener);
-	}
-	
-	public void buttonDown() {
-		Log.d(getClass().getCanonicalName(), "button down");
-		for (IPointerDeviceListener listener : myListeners) {
-			listener.buttonDown(this);
+	public boolean onTouch(View v, MotionEvent source) {
+		int index = source.getActionIndex();
+		int id = source.getPointerId(index);
+		switch (source.getActionMasked()) {
+		case MotionEvent.ACTION_DOWN:
+		case MotionEvent.ACTION_POINTER_DOWN:
+			if (rect().contains((int)source.getX(index), (int)source.getY(index))) {
+				myPointers.add(id);
+				fingerDown(new Event(v, source, id, (int)source.getX(index), (int)source.getY(index)));
+			}
+			break;
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_CANCEL:
+		case MotionEvent.ACTION_POINTER_UP:
+			if (rect().contains((int)source.getX(index), (int)source.getY(index))) {
+				myPointers.remove(id);
+				fingerUp(new Event(v, source, id, (int)source.getX(index), (int)source.getY(index)));
+			}
+			break;
+		case MotionEvent.ACTION_MOVE:
+			for (int p = 0; p < source.getPointerCount(); ++p) {
+				if (myPointers.contains(source.getPointerId(p))) {
+					fingerMove(new Event(v, source, source.getPointerId(p),
+							(int)source.getX(p), (int)source.getY(p)));
+				}
+			}
 		}
-	}
-	
-	public void buttonUp() {
-		Log.d(getClass().getCanonicalName(), "button up");
-		for (IPointerDeviceListener listener : myListeners) {
-			listener.buttonUp(this);
-		}
-	}
-	
-	public void move(float dx, float dy) {
-		Log.d(getClass().getCanonicalName(), "move(" + dx + "," + dy + ")");
-		for (IPointerDeviceListener listener : myListeners) {
-			listener.move(this, dx, dy);
-		}
+		return true;
 	}
 }
