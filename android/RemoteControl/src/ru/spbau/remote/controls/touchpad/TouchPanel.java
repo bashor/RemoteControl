@@ -15,8 +15,9 @@ public class TouchPanel extends BaseCustomControl {
 	private int myTouchId;
 	private float myX;
 	private float myY;
-	
-	public TouchPanel(TypedArray attrs, RectF border) {
+    private TouchPanelListener myListener;
+
+    public TouchPanel(TypedArray attrs, RectF border) {
 		super(attrs, border);
 	}
 	
@@ -57,7 +58,12 @@ public class TouchPanel extends BaseCustomControl {
 				myX = event.getX();
 				myY = event.getY();
 				Log.d(getClass().getCanonicalName(), "finger move(" + dx + "," + dy + ")");
-			}
+                myListener.onMove(this, dx, dy);
+            }
 		}
 	}
+
+    public void setListener(TouchPanelListener listener) {
+        myListener = listener;
+    }
 }

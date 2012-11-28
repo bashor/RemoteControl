@@ -15,8 +15,8 @@ import android.util.Log;
  * @author kmu
  */
 public class ApplicationSettingsSource {
-	private static final String SCHEMA = "http";
-	private static final String PATH = "websocket";
+	private static final String SCHEMA = "ws";
+	private static final String PATH = "/websocket";
 	
 	private static final String SERVER_HOST = "pref_host";
 	private static final String SERVER_PORT = "pref_port";
@@ -30,7 +30,7 @@ public class ApplicationSettingsSource {
 	}
 	
 	public String getHost() {
-		return mySettings.getString(SERVER_HOST, "192.168.1.1");
+		return mySettings.getString(SERVER_HOST, "192.168.0.50");
 	}
 	
 	public int getPort() {
@@ -38,21 +38,33 @@ public class ApplicationSettingsSource {
 	}
 	
 	public String getSource() {
-		return mySettings.getString(SOURCE_ID, "");
+		return mySettings.getString(SOURCE_ID, "1");
 	}
 	
 	public String getTarget() {
-		return mySettings.getString(TARGET_ID, "");
+		return mySettings.getString(TARGET_ID, "2");
 	}
 	
-	public URL getURL() {
-		URL url = null;
-		String query = "from=" + getSource() + "&" + "to=" + getTarget();
+	public URI getURI() {
+		URI uri = null;
+
+        String query = "";
+        String from = getSource();
+        String to = getTarget();
+        if (from.length() > 0) {
+            query = "from=" + from;
+        }
+        if (to.length() > 0) {
+            if (query.length() > 0)
+                query += "&";
+            query += "to=" + to;
+        }
+
 		try {
-			url = new URI(SCHEMA, null, getHost(), getPort(), PATH, query, null).toURL();
+			uri = new URI(SCHEMA, null, getHost(), getPort(), PATH, query, null);
 		} catch (Exception e) {
 			Log.w(this.getClass().getName(), e.getLocalizedMessage());
 		}
-		return url;
+		return uri;
 	}
 }
