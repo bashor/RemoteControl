@@ -1,7 +1,7 @@
 import tornado.websocket
 import tornado.web
 
-from logging import debug
+import logging
 
 
 class PipeHandler(tornado.websocket.WebSocketHandler):
