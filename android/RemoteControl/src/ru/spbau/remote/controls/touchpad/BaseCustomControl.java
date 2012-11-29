@@ -50,9 +50,14 @@ public abstract class BaseCustomControl implements OnTouchListener {
 		return myAttrs.getColor(R.styleable.TouchPadStyle_borderColor, Color.BLACK);
 	}
 	
-	public int panelColor() {
-		return myAttrs.getColor(R.styleable.TouchPadStyle_touchPanelColor, Color.LTGRAY);
+	public int panelMainColor() {
+		return myAttrs.getColor(R.styleable.TouchPadStyle_touchPanelMainColor, Color.LTGRAY);
 	}
+
+	public int panelSubColor() {
+		return myAttrs.getColor(R.styleable.TouchPadStyle_touchPanelSubColor, Color.GREEN);
+	}
+	
 	
 	public int borderWidth() {
 		return myAttrs.getInteger(R.styleable.TouchPadStyle_borderWidth, 2);
@@ -85,28 +90,37 @@ public abstract class BaseCustomControl implements OnTouchListener {
 	
 	public boolean onTouch(View v, MotionEvent source) {
 		int index = source.getActionIndex();
-		int id = source.getPointerId(index);
+		Event main = new Event(v, source, source.getPointerId(index),
+						(int)source.getX(index), (int)source.getY(index),
+						source.getPressure(index));
 		switch (source.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
-			if (rect().contains((int)source.getX(index), (int)source.getY(index))) {
-				myPointers.add(id);
-				fingerDown(new Event(v, source, id, (int)source.getX(index), (int)source.getY(index)));
+			if (rect().contains(main.getX(), main.getY())) {
+				myPointers.add(main.getId());
+				fingerDown(main);
 			}
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_POINTER_UP:
-			if (rect().contains((int)source.getX(index), (int)source.getY(index))) {
-				myPointers.remove(id);
-				fingerUp(new Event(v, source, id, (int)source.getX(index), (int)source.getY(index)));
-			}
+			myPointers.remove(main.getId());
+			fingerUp(main);
 			break;
 		case MotionEvent.ACTION_MOVE:
 			for (int p = 0; p < source.getPointerCount(); ++p) {
-				if (myPointers.contains(source.getPointerId(p))) {
-					fingerMove(new Event(v, source, source.getPointerId(p),
-							(int)source.getX(p), (int)source.getY(p)));
+				Event event = new Event(v, source, source.getPointerId(p),
+						(int)source.getX(p), (int)source.getY(p),
+						source.getPressure(p));
+				if (myPointers.contains(event.getId())) {
+					fingerMove(event);
+					if (!rect().contains(event.getX(), event.getY())) {
+						myPointers.remove(event.getId());
+						fingerUp(event);
+					}
+				} else if (rect().contains(event.getX(), event.getY())) {
+					myPointers.add(event.getId());
+					fingerDown(event);
 				}
 			}
 		}

@@ -10,11 +10,14 @@ import android.util.Log;
 public class TouchPanel extends BaseCustomControl {
 	private static final float THRESHOLD = 0.01f;
 	private static final float RESPONCE = 1.5f;
+	private static final float SCALE = 0.5f;
+	private static final int WIDTH = 2;
 	
 	private boolean myPushedFlag;
 	private int myTouchId;
-	private float myX;
-	private float myY;
+	private int myX;
+	private int myY;
+	private float myPressure;
 	
 	public TouchPanel(TypedArray attrs, RectF border) {
 		super(attrs, border);
@@ -26,8 +29,18 @@ public class TouchPanel extends BaseCustomControl {
 	
 	public void draw(Canvas canvas) {
 		Paint painter = new Paint();
-		painter.setColor(panelColor());
+		painter.setColor(panelMainColor());
 		canvas.drawRect(rect(), painter);
+		if (myPushedFlag) {
+			int r = rect().height() < rect().width() ? rect().height() : rect().width();
+			float scaled = SCALE * myPressure * r;
+			for (int radius = (int)scaled; radius > WIDTH; radius /= 2) {
+				painter.setColor(panelSubColor());
+				canvas.drawCircle(myX, myY, radius, painter);
+				painter.setColor(panelMainColor());
+				canvas.drawCircle(myX, myY, radius - WIDTH, painter);
+			}
+		}
 	}
 	
 	public void fingerDown(Event event) {
@@ -36,6 +49,7 @@ public class TouchPanel extends BaseCustomControl {
 			myTouchId = event.getId();
 			myX = event.getX();
 			myY = event.getY();
+			myPressure = event.getPressure();
 			event.getView().invalidate(rect());
 			Log.d(getClass().getCanonicalName(), "finger down");
 		}		
@@ -51,6 +65,7 @@ public class TouchPanel extends BaseCustomControl {
 	
 	public void fingerMove(Event event) {
 		if (myPushedFlag && event.getId() == myTouchId) {
+			myPressure = event.getPressure();
 			float dx = RESPONCE * (event.getX() - myX) / width();
 			float dy = RESPONCE * (event.getY() - myY) / height();
 			if (abs(dx) > THRESHOLD || abs(dy) > THRESHOLD) {
@@ -58,6 +73,7 @@ public class TouchPanel extends BaseCustomControl {
 				myY = event.getY();
 				Log.d(getClass().getCanonicalName(), "finger move(" + dx + "," + dy + ")");
 			}
+			event.getView().invalidate(rect());
 		}
 	}
 }

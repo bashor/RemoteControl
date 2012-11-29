@@ -12,6 +12,7 @@
 	    <attr name="borderColor" format="color" />
 	    <attr name="buttonMainColor" format="color" />
 	    <attr name="buttonSubColor" format="color" />
-		<attr name="touchPanelColor" format="color" />
+		<attr name="touchPanelMainColor" format="color" />
+		<attr name="touchPanelSubColor" format="color" />
 	</declare-styleable>
 </resources>
