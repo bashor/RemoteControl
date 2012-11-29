@@ -31,6 +31,7 @@ public class TouchPadActivity extends Activity
 
     @Override
     protected void onDestroy() {
+    	super.onDestroy();
         myWebSocketClient.close();
     }
 
