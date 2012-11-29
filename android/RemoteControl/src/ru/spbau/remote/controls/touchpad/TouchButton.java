@@ -7,8 +7,9 @@ import android.util.Log;
 
 public class TouchButton extends BaseCustomControl {
 	private boolean myPushedFlag;
-	
-	public TouchButton(TypedArray attrs) {
+    private TouchButtonListener myListener;
+
+    public TouchButton(TypedArray attrs) {
 		super(attrs);
 	}
 	
@@ -23,6 +24,7 @@ public class TouchButton extends BaseCustomControl {
 			myPushedFlag = true;
 			event.getView().invalidate(rect());
 			Log.d(getClass().getCanonicalName(), "button down");
+            myListener.onDown(this);
 		}
 	}
 	
@@ -31,6 +33,11 @@ public class TouchButton extends BaseCustomControl {
 			myPushedFlag = false;
 			event.getView().invalidate(rect());
 			Log.d(getClass().getCanonicalName(), "button up");
+            myListener.onUp(this);
 		}
 	}
+
+    public void setListener(TouchButtonListener listener) {
+        myListener = listener;
+    }
 }

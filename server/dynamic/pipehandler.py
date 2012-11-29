@@ -17,16 +17,18 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
         """
         self.target_id = self.get_argument("to")
         self.source_id = self.get_argument("from")
-        if self.source_id in connections():
-            logger().debug("duplicate connection",
+        if self.source_id in self.connections():
+            self.logger().debug("duplicate connection",
                 extra={
-                    "target": connections()[self.source_id].target_id,
+                    "target": self.connections()[self.source_id].target_id,
                     "source": self.source_id
                 }
             )
-            connections()[self.source_id].close()
-        connections()[self.source_id] = self
-        logger().debug("new connection accepted",
+            self.connections()[self.source_id].close()
+        self.connections()[self.source_id] = self
+        # fixme
+        print "new connection accepted"
+        self.logger().debug("new connection accepted",
             extra={
                 "target": self.target_id,
                 "source": self.source_id
@@ -38,27 +40,29 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
            modifications (operates like a pipe). Target connections takes from
            a dict.
         """
-        logger().debug("message received: %s", message,
+        # fixme
+        print "message received: ", message
+        self.logger().debug("message received: %s", message,
             extra={
                 "target": self.target_id,
                 "source": self.source_id
             }
         )
-        if self.target_id in connections():
-            target_conn = connections()[self.target_id]
+        if self.target_id in self.connections():
+            target_conn = self.connections()[self.target_id]
             if (target_conn.target_id == self.source_id):
-                logger().debug("message retransmition")
+                self.logger().debug("message retransmition")
                 target_conn.write_message(message)
 
     def on_close(self):
         """Handles connection closing. Removes connection id from a dict."""
-        logger().debug("close connection",
+        self.logger().debug("close connection",
             extra={
                 "target": self.target_id,
                 "source": self.source_id
             }
         )
-        del connections()[self.source_id]
+        del self.connections()[self.source_id]
 
     def connections(self):
         return self.__class__.__connections
