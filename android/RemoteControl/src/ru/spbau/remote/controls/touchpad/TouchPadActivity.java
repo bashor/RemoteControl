@@ -42,37 +42,37 @@ public class TouchPadActivity extends Activity implements TouchPadListener, WebS
 
     @Override
     public void onClickLeftButton() {
-        webSocketClient.send("onClickLeftButton");
+        webSocketClient.send("{ \"type\":\"onClickLeftButton\" }");
     }
 
     @Override
     public void onClickRightButton() {
-        webSocketClient.send("onClickRightButton");
+        webSocketClient.send("{ \"type\":\"onClickRightButton\" }");
     }
 
     @Override
     public void onDownLeftButton() {
-        webSocketClient.send("onDownLeftButton");
+        webSocketClient.send("{ \"type\":\"onDownLeftButton\" }");
     }
 
     @Override
     public void onUpLeftButton() {
-        webSocketClient.send("onUpLeftButton");
+        webSocketClient.send("{ \"type\":\"onUpLeftButton\" }");
     }
 
     @Override
     public void onDownRightButton() {
-        webSocketClient.send("onDownRightButton");
+        webSocketClient.send("{ \"type\":\"onDownRightButton\" }");
     }
 
     @Override
     public void onUpRightButton() {
-        webSocketClient.send("onUpRightButton");
+        webSocketClient.send("{ \"type\":\"onUpRightButton\" }");
     }
 
     @Override
     public void onMove(float dx, float dy) {
-        webSocketClient.send(String.format("onMove\tdx=%.2f\tdy=%.2f", dx, dy));
+        webSocketClient.send(String.format("{ \"type\":\"onMove\", \"dx\":\"%.2f\", \"dy\":\"%.2f\"}", dx, dy));
     }
 
     @Override

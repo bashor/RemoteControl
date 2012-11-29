@@ -35,6 +35,63 @@
 				<a href="http://code.google.com/p/robot-mitya/">droid Mitya, we are going to make drive</a>
 			</li>
 		</ol>
+		<div id="cursor" style="position: absolute; width:10; height:10; background-color:red; top:0; left:0; color:red">
+			<span id="left">[</span>
+			<span id="right">]</span>
+		</div>
 	</body>
+
+	<script type="text/javascript">
+		// socket.send(JSON.stringify(message));
+
+		var from = 2;
+		var to = 1;
+		var cursor = document.getElementById("cursor");
+		var left = document.getElementById("left");
+		var right = document.getElementById("right");
+		var cursorX = 0;
+		var cursorY = 0;
+		var socket = new WebSocket("ws://" + document.location.host + "/websocket?from=" + from + "&to=" + to);
+
+		var DISCONNECTED_COLOR = "red"
+		var CONNECTED_COLOR = "green"
+		var DOWN_COLOR = "lime"
+		var UP_COLOR = CONNECTED_COLOR
+		
+		socket.onopen = function () {
+			cursor.style.backgroundColor = CONNECTED_COLOR;
+		};
+
+		socket.onmessage = function(event) {
+			var data = JSON.parse(event.data)
+			if (data.type === "onMove") {
+				cursorX += data.dx * 100;
+				cursorY += data.dy * 100;
+				cursor.style.left = cursorX + "px";
+				cursor.style.top = cursorY + "px";
+			}
+
+			if (data.type === "onMove") {
+				cursorX += data.dx * 10;
+				cursorY += data.dy * 10;
+				cursor.style.left = cursorX + "px";
+				cursor.style.top = cursorY + "px";
+			} else if (data.type === "onDownLeftButton") {
+				left.style.backgroundColor = DOWN_COLOR;
+			} else if (data.type === "onUpLeftButton") {
+				left.style.backgroundColor = UP_COLOR;
+			} else if (data.type === "onDownRightButton") {
+				right.style.backgroundColor = DOWN_COLOR;
+			} else if (data.type === "onUpRightButton") {
+				right.style.backgroundColor = UP_COLOR;
+			}
+		}
+
+		socket.onclose = function () {
+			cursor.style.backgroundColor = DISCONNECTED_COLOR;
+			left.style.backgroundColor = "transparent";
+			right.style.backgroundColor = "transparent";
+		}
+	</script>
 </html>
 
