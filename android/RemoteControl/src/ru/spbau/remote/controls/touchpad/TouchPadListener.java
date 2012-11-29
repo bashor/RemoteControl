@@ -1,9 +1,6 @@
 package ru.spbau.remote.controls.touchpad;
 
-public interface TouchPadListener {
-
-    void onClickLeftButton();
-    void onClickRightButton();
+interface TouchPadListener {
 
     void onDownLeftButton();
     void onUpLeftButton();

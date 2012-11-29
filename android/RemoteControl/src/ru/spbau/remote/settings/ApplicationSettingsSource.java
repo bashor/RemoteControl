@@ -1,7 +1,6 @@
 package ru.spbau.remote.settings;
 
 import java.net.URI;
-import java.net.URL;
 
 import android.content.Context;
 import android.content.SharedPreferences;

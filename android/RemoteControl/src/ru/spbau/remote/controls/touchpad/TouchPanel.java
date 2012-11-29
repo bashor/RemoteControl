@@ -15,19 +15,12 @@ public class TouchPanel extends BaseCustomControl {
 	
 	private boolean myPushedFlag;
 	private int myTouchId;
-<<<<<<< HEAD
 	private int myX;
 	private int myY;
 	private float myPressure;
+	private TouchPanelListener myListener;
 	
-	public TouchPanel(TypedArray attrs, RectF border) {
-=======
-	private float myX;
-	private float myY;
-    private TouchPanelListener myListener;
-
     public TouchPanel(TypedArray attrs, RectF border) {
->>>>>>> 89834377948a957f652001514b72e8d2ce218086
 		super(attrs, border);
 	}
 	
@@ -80,13 +73,9 @@ public class TouchPanel extends BaseCustomControl {
 				myX = event.getX();
 				myY = event.getY();
 				Log.d(getClass().getCanonicalName(), "finger move(" + dx + "," + dy + ")");
-<<<<<<< HEAD
-			}
-			event.getView().invalidate(rect());
-=======
                 myListener.onMove(this, dx, dy);
             }
->>>>>>> 89834377948a957f652001514b72e8d2ce218086
+			event.getView().invalidate(rect());
 		}
 	}
 

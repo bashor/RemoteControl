@@ -11,8 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class TouchPadView extends View implements TouchPanelListener, TouchButtonListener {
-    private static final String TAG = TouchPadView.class.getCanonicalName();
-
 	private static final int DEFAULT_MARGIN = 5;
 	private static final int DEFAULT_PADDING = 5;
 	private static final int DEFAULT_BUTTON_HEIGHT = 20;
@@ -24,8 +22,6 @@ public class TouchPadView extends View implements TouchPanelListener, TouchButto
 	private TouchButton myLeft;
 	private TouchButton myRight;
     private TouchPadListener myListener;
-    private boolean myLeftIsDown = false;
-    private boolean myRightIsDown = false;
 
     public TouchPadView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -138,51 +134,42 @@ public class TouchPadView extends View implements TouchPanelListener, TouchButto
 		invalidate();
 	}
 
-    @Override
     public void onMove(Object panel, float dx, float dy) {
-        Log.d(TAG, "move");
+        Log.d(getClass().getCanonicalName(), "move");
         if (myListener != null) {
             myListener.onMove(dx, dy);
         }
     }
 
-    @Override
     public void onDown(Object button) {
         if (button == myLeft) {
-            Log.d(TAG, "left button down");
+            Log.d(getClass().getCanonicalName(), "left button down");
             if (myListener != null) {
                 myListener.onDownLeftButton();
-                myLeftIsDown = true;
             }
         } else {
-            Log.d(TAG, "right button down");
+            Log.d(getClass().getCanonicalName(), "right button down");
             if (myListener != null) {
                 myListener.onDownRightButton();
-                myRightIsDown = true;
             }
         }
     }
 
-    @Override
     public void onUp(Object button) {
         if (button == myLeft) {
-            Log.d(TAG, "left button up");
+            Log.d(getClass().getCanonicalName(), "left button up");
             if (myListener != null) {
                 myListener.onUpLeftButton();
-                if (myLeftIsDown)
-                    myListener.onClickLeftButton();
             }
         } else {
-            Log.d(TAG, "right button up");
+            Log.d(getClass().getCanonicalName(), "right button up");
             if (myListener != null) {
                 myListener.onUpRightButton();
-                if (myRightIsDown)
-                    myListener.onClickRightButton();
             }
         }
     }
 
-    public void addListener(TouchPadListener listener) {
+    public void setListener(TouchPadListener listener) {
         myListener = listener;
     }
 }

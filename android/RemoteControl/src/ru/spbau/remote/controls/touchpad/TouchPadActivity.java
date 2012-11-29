@@ -4,89 +4,65 @@ import ru.spbau.remote.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import ru.spbau.remote.WebSocketClient;
+import ru.spbau.remote.net.WebSocketClient;
 import ru.spbau.remote.settings.ApplicationSettingsSource;
 
 import java.net.URI;
 
-public class TouchPadActivity extends Activity implements TouchPadListener, WebSocketClient.StatusListener {
-    private static final String TAG = TouchPadActivity.class.getCanonicalName();
-
-    ApplicationSettingsSource settings;
-    WebSocketClient webSocketClient = new WebSocketClient();
+public class TouchPadActivity extends Activity
+		implements TouchPadListener, WebSocketClient.StatusListener {
+    ApplicationSettingsSource mySettings;
+    WebSocketClient myWebSocketClient = new WebSocketClient();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         Log.d(getClass().getCanonicalName(), "TouchPadActivity onCreate");
-
 		setContentView(R.layout.touchpad);
-
         TouchPadView touchpad = (TouchPadView) findViewById(R.id.touchpad_id);
-
-        touchpad.addListener(this);
-
-        settings = new ApplicationSettingsSource(this);
-
-        URI uri = settings.getURI();
+        touchpad.setListener(this);
+        mySettings = new ApplicationSettingsSource(this);
+        URI uri = mySettings.getURI();
         if (uri != null) {
-            webSocketClient.connect(uri);
-            webSocketClient.setStatusListener(this);
+            myWebSocketClient.connect(uri);
+            myWebSocketClient.setStatusListener(this);
         }
 	}
 
     @Override
     protected void onDestroy() {
-        webSocketClient.close();
+        myWebSocketClient.close();
     }
 
-    @Override
-    public void onClickLeftButton() {
-        webSocketClient.send("{ \"type\":\"onClickLeftButton\" }");
-    }
-
-    @Override
-    public void onClickRightButton() {
-        webSocketClient.send("{ \"type\":\"onClickRightButton\" }");
-    }
-
-    @Override
     public void onDownLeftButton() {
-        webSocketClient.send("{ \"type\":\"onDownLeftButton\" }");
+        myWebSocketClient.send("{ \"type\":\"onDownLeftButton\" }");
     }
 
-    @Override
     public void onUpLeftButton() {
-        webSocketClient.send("{ \"type\":\"onUpLeftButton\" }");
+        myWebSocketClient.send("{ \"type\":\"onUpLeftButton\" }");
     }
 
-    @Override
     public void onDownRightButton() {
-        webSocketClient.send("{ \"type\":\"onDownRightButton\" }");
+        myWebSocketClient.send("{ \"type\":\"onDownRightButton\" }");
     }
 
-    @Override
     public void onUpRightButton() {
-        webSocketClient.send("{ \"type\":\"onUpRightButton\" }");
+        myWebSocketClient.send("{ \"type\":\"onUpRightButton\" }");
     }
 
-    @Override
     public void onMove(float dx, float dy) {
-        webSocketClient.send(String.format("{ \"type\":\"onMove\", \"dx\":\"%.2f\", \"dy\":\"%.2f\"}", dx, dy));
+        myWebSocketClient.send(String.format("{ \"type\":\"onMove\", \"dx\":\"%.2f\", \"dy\":\"%.2f\"}", dx, dy));
     }
 
-    @Override
     public void onOpen() {
-        Log.d(TAG, "ws opened");
+        Log.d(getClass().getCanonicalName(), "ws opened");
     }
 
-    @Override
     public void onClose() {
-        Log.d(TAG, "ws closed");
+        Log.d(getClass().getCanonicalName(), "ws closed");
     }
 
-    @Override
-    public void onError(String e) {
-        Log.e(TAG, "ws error: " + e);
+    public void onError(Exception e) {
+        Log.e(getClass().getCanonicalName(), "ws error: " + e.getLocalizedMessage());
     }
 }
