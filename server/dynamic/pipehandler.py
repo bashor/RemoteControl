@@ -3,7 +3,6 @@ import tornado.web
 
 import logging
 
-
 class PipeHandler(tornado.websocket.WebSocketHandler):
     """Handles input WebSocket events, like new client connection, message
        receiving and connection closing.
@@ -26,8 +25,6 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
             )
             self.connections()[self.source_id].close()
         self.connections()[self.source_id] = self
-        # fixme
-        print "new connection accepted"
         self.logger().debug("new connection accepted",
             extra={
                 "target": self.target_id,
@@ -40,8 +37,6 @@ class PipeHandler(tornado.websocket.WebSocketHandler):
            modifications (operates like a pipe). Target connections takes from
            a dict.
         """
-        # fixme
-        print "message received: ", message
         self.logger().debug("message received: %s", message,
             extra={
                 "target": self.target_id,
