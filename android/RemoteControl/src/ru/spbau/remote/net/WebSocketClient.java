@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.net.URI;
 
 import org.java_websocket.handshake.ServerHandshake;
+import org.java_websocket.WebSocket;
 
 public class WebSocketClient implements Closeable {
     private org.java_websocket.client.WebSocketClient myWebSocketClient;
@@ -43,7 +44,7 @@ public class WebSocketClient implements Closeable {
 
     public void close() {
         try {
-        	if (myWebSocketClient != null) {
+        	if (myWebSocketClient != null && (myWebSocketClient.getReadyState() == WebSocket.READY_STATE_OPEN)) {
         		myWebSocketClient.close();
         	}
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class WebSocketClient implements Closeable {
 
     public void send(String message) {
     	try {
-    		if (myWebSocketClient != null) {
+    		if (myWebSocketClient != null && (myWebSocketClient.getReadyState() == WebSocket.READY_STATE_OPEN)) {
     			myWebSocketClient.send(message);
     		}
         } catch (Exception e) {
