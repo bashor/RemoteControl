@@ -65,16 +65,15 @@
 
 			socket.onmessage = function(event) {
 				var data = JSON.parse(event.data)
-				if (data.type === "onMove") {
-					cursorX += data.dx * 100;
-					cursorY += data.dy * 100;
-					cursor.style.left = cursorX + "px";
-					cursor.style.top = cursorY + "px";
+
+				function calcOffset(delta, max) {
+					var absDelta = Math.abs(delta);
+					return delta * max * 0.7
 				}
 
 				if (data.type === "onMove") {
-					cursorX += data.dx * 10;
-					cursorY += data.dy * 10;
+					cursorX += calcOffset(data.dx, window.innerWidth);
+					cursorY += calcOffset(data.dy, window.innerHeight);
 					cursor.style.left = cursorX + "px";
 					cursor.style.top = cursorY + "px";
 				} else if (data.type === "onDownLeftButton") {
