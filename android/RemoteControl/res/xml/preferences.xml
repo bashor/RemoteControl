@@ -10,8 +10,7 @@
     <EditTextPreference
         android:key="pref_port"
         android:title="@string/pref_port"
-        android:summary="@string/pref_port_desription"
-        android:numeric="integer"
+        android:summary="@string/pref_port_description"
         android:dialogTitle="@string/pref_port"
         android:defaultValue="@string/pref_port_default"
         />

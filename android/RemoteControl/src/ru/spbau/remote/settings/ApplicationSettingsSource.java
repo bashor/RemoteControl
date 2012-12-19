@@ -33,15 +33,15 @@ public class ApplicationSettingsSource {
 	}
 	
 	public int getPort() {
-		return mySettings.getInt(SERVER_PORT, 8080);
+		return Integer.parseInt(mySettings.getString(SERVER_PORT, "8080"));
 	}
 	
 	public String getSource() {
-		return mySettings.getString(SOURCE_ID, "1");
+		return mySettings.getString(SOURCE_ID, null);
 	}
 	
 	public String getTarget() {
-		return mySettings.getString(TARGET_ID, "2");
+		return mySettings.getString(TARGET_ID, null);
 	}
 	
 	public URI getURI() {
@@ -62,7 +62,7 @@ public class ApplicationSettingsSource {
 		try {
 			uri = new URI(SCHEMA, null, getHost(), getPort(), PATH, query, null);
 		} catch (Exception e) {
-			Log.w(this.getClass().getName(), e.getLocalizedMessage());
+			Log.e(this.getClass().getName(), e.getLocalizedMessage());
 		}
 		return uri;
 	}
