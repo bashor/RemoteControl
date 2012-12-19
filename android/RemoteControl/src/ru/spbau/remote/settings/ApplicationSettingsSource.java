@@ -50,6 +50,10 @@ public class ApplicationSettingsSource {
         String query = "";
         String from = getSource();
         String to = getTarget();
+
+        if (from == null || to == null)
+            return null;
+
         if (from.length() > 0) {
             query = "from=" + from;
         }
