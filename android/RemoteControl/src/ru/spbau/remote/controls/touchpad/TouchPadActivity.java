@@ -61,6 +61,13 @@ public class TouchPadActivity extends Activity
 
     public void onClose() {
         Log.d(getClass().getCanonicalName(), "ws closed");
+        Log.d(getClass().getCanonicalName(), "ws reconnecting...");
+
+        mySettings = new ApplicationSettingsSource(this);
+        URI uri = mySettings.getURI();
+        if (uri != null) {
+            myWebSocketClient.connect(uri);
+        }
     }
 
     public void onError(Exception e) {
